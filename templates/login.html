@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../static/get-code.js"></script>
+    <script type="text/javascript">
+
+        var code;
+
+        {#window.onload = function () {#}
+        {#    console.log(window.location.href)#}
+            {#http://boss-vip.utools.club/?code=43555ccb52da4eaabc5d9e28780e5f27c8b93503&state=1212#}
+        {#    let url = window.location.href#}
+        {#    var a = url.indexOf('code=')#}
+        {#    let b = url.indexOf('&state')#}
+        {#    code = url.substring(a + 5, b)#}
+        {#    loadXMLDoc(code)#}
+        {#}#}
+
+        var xmlhttp;
+
+        function loadXMLDoc(code) {
+            xmlhttp = null;
+            if (window.XMLHttpRequest) {// code for all new browsers
+                xmlhttp = new XMLHttpRequest();
+            } else if (window.ActiveXObject) {// code for IE5 and IE6
+                xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            if (xmlhttp != null) {
+                xmlhttp.onreadystatechange = state_Change;
+                xmlhttp.open("GET", `http://127.0.0.1:5000/access_token?code=${code}`, true);
+                xmlhttp.send(null);
+            } else {
+                alert("Your browser does not support XMLHTTP.");
+            }
+        }
+
+        function state_Change() {
+            if (xmlhttp.readyState == 4) {// 4 = "loaded"
+                if (xmlhttp.status == 200) {// 200 = OK
+                    // ...our code here...
+                } else {
+                    alert("Problem retrieving XML data");
+                }
+            }
+        }
+    </script>
+
+</head>
+<body>
+    <form method=post enctype=multipart/form-data action="/auth">
+        <input type=submit value=授权>
+    </form>
+{#    <button onclick="loadXMLDoc('aaaaaaaaaa')"></button>#}
+</body>
+</html>
