@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Upload File</title>
+    <link rel="stylesheet" type="text/css" href="../static/index.css" >
 </head>
 <body>
     <h1>文件上传</h1>
@@ -11,8 +12,8 @@
          <input type=submit value=上传>
     </form>
     <br>
-   <form method=post enctype=multipart/form-data action="/auth">
-        <input type=submit value=授权>
+   <form method=post enctype=multipart/form-data action="/access_token">
+        <input class="auth" type=submit value={{ auth_title }}>
     </form>
 </body>
 </html>

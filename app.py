@@ -6,7 +6,7 @@ import time
 import hashlib
 import common
 from flask import Flask, request, url_for, send_from_directory, render_template, redirect
-from utils import sign
+from utils import param, db, excel
 from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = set(['xls'])
@@ -31,6 +31,9 @@ def uploaded_file(filename):
 
 @app.route('/auth', methods=['GET', 'POST'])
 def auth():
+    # token = db.find()
+    # if token:
+    #     return '已授权'
     return redirect(
         'https://mai.pinduoduo.com/h5-login.html?response_type=code&client_id=86b52cf3146d42dfb4ca0ff994006db0&redirect_uri=http://boss-vip.utools.club/access_token&&state=1212&view=h5')
 
@@ -44,24 +47,29 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             file_url = url_for('uploaded_file', filename=filename)
             # return html + '<br><img src=' + file_url + '>'
-            return '表格上传成功'
-    return render_template('index.html')
+            excel.read_excel_send(filename)
+            return '表格上传成功，发送中'
+    return render_template('index.html', auth_title='授权')
 
 
-@app.route('/access_token', methods=['GET'])
+@app.route('/access_token', methods=['GET', 'POST'])
 def access_token():
-    code = request.values['code']
-
-    adata = {
-        'client_id': common.client_id,
-        'code': code,
-        'grant_type': common.grant_type,
-        'client_secret': common.client_secret
-    }
-
-    response = requests.post(common.url, headers=common.aheaders, data=json.dumps(adata))
-    access_token = response.json()['access_token']
+    # 授权获取code
+    # code = request.values['code']
+    # adata = {
+    #     'code': code,
+    # }
+    # response = requests.post('https://open-api.pinduoduo.com/oauth/token',
+    #                          headers=common.aheaders,
+    #                          data=json.dumps(param.data_param(adata)))
+    # response_json = response.json()
+    # access_token = response_json['access_token']
+    access_token = 'test'
     print(access_token)
+    db.insert_one({
+        'access_token': access_token,
+        'timestamp': str(int(time.time()))
+    })
     return render_template('index.html')
 
 
@@ -73,9 +81,9 @@ def get_express():
         'timestamp': str(int(time.time())),
     }
 
-    sign.data_sign(adata)
-
-    response = requests.post(common.url, headers=common.aheaders, data=json.dumps(adata))
+    response = requests.post(common.url,
+                             headers=common.aheaders,
+                             data=json.dumps(param.data_sign(adata)))
     return response.json()
 
 

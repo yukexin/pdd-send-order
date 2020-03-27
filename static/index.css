@@ -1,0 +1,12 @@
+.auth {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    height: 50px;
+    width: 100px;
+    border: 1px solid black;
+}
+html, body {
+    height: 100%;
+    background: antiquewhite;
+}
