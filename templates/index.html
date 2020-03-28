@@ -7,12 +7,12 @@
 </head>
 <body>
     <h1>文件上传</h1>
-    <form method=post enctype=multipart/form-data>
+    <form method=post enctype=multipart/form-data action="/">
          <input type=file name=file>
          <input type=submit value=上传>
     </form>
     <br>
-   <form method=post enctype=multipart/form-data action="/access_token">
+   <form method=post enctype=multipart/form-data action="/auth">
         <input class="auth" type=submit value={{ auth_title }}>
     </form>
 </body>

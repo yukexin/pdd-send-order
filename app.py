@@ -31,11 +31,12 @@ def uploaded_file(filename):
 
 @app.route('/auth', methods=['GET', 'POST'])
 def auth():
-    # token = db.find()
-    # if token:
-    #     return '已授权'
-    return redirect(
-        'https://mai.pinduoduo.com/h5-login.html?response_type=code&client_id=86b52cf3146d42dfb4ca0ff994006db0&redirect_uri=http://boss-vip.utools.club/access_token&&state=1212&view=h5')
+    access_token = db.find()
+    if access_token == 'empty':
+        return redirect(
+            'https://mai.pinduoduo.com/h5-login.html?response_type=code&client_id=86b52cf3146d42dfb4ca0ff994006db0&redirect_uri=http://boss-vip.utools.club/access_token&&state=1212&view=h5')
+    else:
+        return render_template('index.html', auth_title='已授权')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -46,7 +47,6 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             file_url = url_for('uploaded_file', filename=filename)
-            # return html + '<br><img src=' + file_url + '>'
             excel.read_excel_send(filename)
             return '表格上传成功，发送中'
     return render_template('index.html', auth_title='授权')
@@ -55,22 +55,22 @@ def upload_file():
 @app.route('/access_token', methods=['GET', 'POST'])
 def access_token():
     # 授权获取code
-    # code = request.values['code']
-    # adata = {
-    #     'code': code,
-    # }
-    # response = requests.post('https://open-api.pinduoduo.com/oauth/token',
-    #                          headers=common.aheaders,
-    #                          data=json.dumps(param.data_param(adata)))
-    # response_json = response.json()
-    # access_token = response_json['access_token']
-    access_token = 'test'
+    code = request.values['code']
+    adata = {
+        'code': code,
+    }
+    response = requests.post('https://open-api.pinduoduo.com/oauth/token',
+                             headers=common.aheaders,
+                             data=json.dumps(param.data_param(adata)))
+    response_json = response.json()
+    print(response_json)
+    access_token = response_json['access_token']
     print(access_token)
     db.insert_one({
         'access_token': access_token,
         'timestamp': str(int(time.time()))
     })
-    return render_template('index.html')
+    return render_template('index.html', auth_title='已授权')
 
 
 @app.route('/get_express', methods=['GET', 'POST'])

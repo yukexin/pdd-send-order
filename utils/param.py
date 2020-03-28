@@ -1,6 +1,7 @@
 import hashlib
 import common
 import time
+from utils import db
 
 
 def data_param(adata):
@@ -8,7 +9,9 @@ def data_param(adata):
     adata['grant_type'] = common.grant_type
     adata['client_secret'] = common.client_secret
     adata['timestamp'] = str(int(time.time()))
-    adata['access_token'] = 'e3eb824958be45df8362cd12d5e6432f8b55532a'
+    access_token = db.find()
+    if access_token == 'empty':
+        adata['access_token'] = access_token
 
 
 def data_sign(adata):
